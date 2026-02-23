@@ -4,12 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplikasi AI Saya</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        textarea { width: 100%; height: 100px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #4285f4; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #result { margin-top: 20px; white-space: pre-wrap; background: #eee; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <iframe src="https://aistudio.google.com/apps/09c3ec2f-beae-43a8-b8cf-7bad3cf231f7"></iframe>
+    <div class="container">
+        <h2>Tanya AI Saya</h2>
+        <textarea id="userInput" placeholder="Ketik sesuatu di sini..."></textarea>
+        <button id="sendBtn">Kirim ke AI</button>
+        <div id="result">Hasil akan muncul di sini...</div>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // GANTI BAGIAN DI BAWAH INI DENGAN API KEY KAMU
+        const API_KEY = "AIzaSyAev7JhjeQMBXV2VD_7eaqsd1gR7YoQH-Q";
+        const genAI = new GoogleGenerativeAI(API_KEY);
+
+        document.getElementById('sendBtn').onclick = async () => {
+            const input = document.getElementById('userInput').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerText = "Sedang berpikir...";
+            
+            try {
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                const result = await model.generateContent(input);
+                const response = await result.response;
+                resultDiv.innerText = response.text();
+            } catch (error) {
+                resultDiv.innerText = "Error: Pastikan API Key benar!";
+            }
+        };
+    </script>
 </body>
 </html>
